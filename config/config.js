@@ -26,13 +26,17 @@ export default {
                         { path: '/dashboard/monitor',component: 'Dashboard/Monitor'},
                         { path: '/dashboard/workplace',component: 'Dashboard/Workplace'},
                     ]
+                },
+                {
+                    path: 'list',
+                    component: '../page/list'
                 }
             ]
         }
     ],
     proxy: {
         '/dev': {
-            target: 'http://localhost:3005',
+            target: 'http://127.0.0.1:8080',
             changeOrigin: true,
             },
   },

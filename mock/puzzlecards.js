@@ -13,11 +13,33 @@ const random_jokes = [
     },
 ];
 
+const cardinfo = {result:[
+        {
+            "id": 1,
+            "name": "LZY",
+            "desc": "哈哈哈",
+            "url": "www.baidu.com"
+        }
+    ]}
+
+
 let random_joke_call_count = 0
 export default {
     'get /dev/random_joke': function (req, res) {
-        const responseObj = random_jokes[random_joke_call_count % random_jokes.length];
-        random_joke_call_count += 1
-
+        // const responseObj = random_jokes[random_joke_call_count % random_jokes.length];
+        // random_joke_call_count += 1;
+        // setTimeout(() => {
+        //     res.json(responseObj);
+        // },3000)
+        res.status(500);
+        res.json({})
+    },
+    'get /dev/api/cards': function (req, res) {
+        const responseObj = cardinfo
+        setTimeout(() => {
+            res.json(responseObj);
+        }, 3000)
+        // res.status(500);
+        // res.json({})
     }
 }
