@@ -1,4 +1,5 @@
 import * as cardsService from '../service/cards';
+import {addNewCard, getCardInfo} from "@/api/cardinfo";
 
 export default {
     namespace: 'cards',
@@ -8,10 +9,10 @@ export default {
     },
     effects: {
         *queryList({_},{call,put}){
-            const rsp = yield call(cardsService.queryList);
+            const rsp = yield call(getCardInfo);
             console.log('queryList');
-            console.log(rsp);
-            yield put({type:'saveList',payload: {cardsList: res.result}})
+            console.log(rsp.data);
+            yield put({type:'saveList',payload: {cardsList: rsp.data}})
         },
         *deleteOne({payload},{call,put}){
             const rsp = yield call(cardsService.deleteOne, payload);
@@ -19,11 +20,11 @@ export default {
             console.log(rsp)
             return rsp
         },
-        // *addOne({payload},{call, put}){
-        //     const rsp = yield call(cardsService.addOne, payload)
-        //     yield put({type: 'queryList'});
-        //     return rsp
-        // },
+        *addOne({payload},{call, put}){
+            const rsp = yield call(addNewCard, payload)
+            yield put({type: 'queryList'});
+            return rsp
+        },
         *getStatistic({payload},{call,put}){
             const rsp = yield call(cardsService.getStatistic, payload);
             yield put({

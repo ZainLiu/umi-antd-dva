@@ -1,5 +1,5 @@
 import {Component} from "react";
-import { Card ,Button } from "antd";
+import { Card ,Button,Table } from "antd";
 import { connect } from "dva";
 
 const namespace = 'puzzlecards';
@@ -34,32 +34,32 @@ const  mapDispatchToProps = (dispatch) => {
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class PuzzlecardsPage extends Component{
+    colums = [
+        {
+            title: '名称',
+            dataIndex: 'name',
+        },
+        {
+            title: '描述',
+            dataIndex: 'desc',
+        },
+        {
+            title: '链接',
+            dataIndex: 'url',
+            render: value => <a href={value}>{value}</a>,
+        },
+    ];
     componentDidMount() {
         this.props.onDidMount();
     }
 
     render() {
+        const { cardsList, cardsLoading } = this.props;
+
         return (
             <div>
-                {
-                    this.props.cardList.map(card => {
-                        return (
-                            <Card key={card.id}>
-                                <div>Q: {card.setup}</div>
-                                <div>
-                                    <strong>A: {card.punchline}</strong>
-                                </div>
-                            </Card>
-                        )
-                    })
-                }
-                {/*<div>*/}
-                {/*    <Button onClick={() => this.props.onClickAdd({*/}
-                {/*        setup: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',*/}
-                {/*        punchline: 'here we use dva',*/}
-                {/*    })}>添加卡片</Button>*/}
-                {/*</div>*/}
+                <Table columns={this.columns} dataSource={cardsList} loading={cardsLoading} rowKey="id" />
             </div>
-        )
+        );
     }
 };

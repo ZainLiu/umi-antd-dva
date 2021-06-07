@@ -1,16 +1,33 @@
-import {Table, Button, Form, Modal, Input} from "antd";
+import {Table, Button, Form, Modal, Input, Menu, Dropdown} from "antd";
 import React from "react";
 import {connect} from "dva";
 import SampleChart from "../../component/SampleChart";
-
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 const FormItem = Form.Item
+
+
 
 class List extends React.Component{
     state = {
         visible: false,
         statisticVisible: false,
         id: null,
+        editvisible: false
     };
+    menu = (
+        <Menu>
+            <Menu.Item>
+                <a target="_blank" rel="noopener noreferrer" onSelect={this.showEdit}>
+                    编辑
+                </a>
+            </Menu.Item>
+            <Menu.Item>
+                <a target="_blank" rel="noopener noreferrer" onSelect={this.showEdit}>
+                    删除
+                </a>
+            </Menu.Item>
+        </Menu>
+    );
     colums = [
         {
             title: '名称',
@@ -34,7 +51,9 @@ class List extends React.Component{
             dataIndex: 'statistic',
             render: (_,{id}) => {
                 return (
-                    <Button onClick={()=>{this.showStatistic(id)}}>图表</Button>
+                    <Dropdown overlay={this.menu} placement="bottomLeft">
+                        <Button>操作</Button>
+                    </Dropdown>
                 )
             }
         }
@@ -55,11 +74,14 @@ class List extends React.Component{
     showModel = () => {
         this.setState({visible:true});
     };
+    showEdit = () => {
+        this.setState({editvisible: true})
+    }
     handleok = () => {
-        const {dispath,form: {validateFields}} = this.props;
+        const {dispatch,form: {validateFields}} = this.props;
         validateFields((err, values) => {
             if (!err){
-                dispath({
+                dispatch({
                     type: 'cards/addOne',
                     payload: values,
                 });
@@ -72,23 +94,57 @@ class List extends React.Component{
             visible: false,
         })
     };
+    handleEditCancel = () => {
+        this.setState({editvisible: false})
+    }
+    handleEditOk = () => {
+        console.log("OK")
+    }
     handleStatisticCancel = () =>{
         this.setState({
             statisticVisible:false,
         });
     }
     render() {
-        const {visible, statisticVisible,id} = this.state;
+        const {visible, statisticVisible,id, editvisible} = this.state;
         const {cardsList,cardsLoading,form:{getFieldDecorator},statistic} = this.props;
         return (
             <div>
                 <Table columns={this.colums} dataSource={cardsList} loading={cardsLoading} rowKey='id'/>
-                <Button onClick={this.showModel}>新建</Button>
+                <Button icon={<SearchOutlined />} onClick={this.showModel}>新建</Button>
                 <Modal
                     title="新建记录"
                     visible={visible}
                     onOk={this.handleok}
                     onCancel={this.handleCancel}
+                >
+                    <Form>
+                        <FormItem label="名称">
+                            {getFieldDecorator('name',{
+                                rules: [{required: true}],
+                            })(
+                                <Input/>
+                            )}
+                        </FormItem>
+                        <FormItem label="描述">
+                            {getFieldDecorator('desc')(
+                                <Input/>
+                            )}
+                        </FormItem>
+                        <FormItem label="链接">
+                            {getFieldDecorator('url',{
+                                rules: [{type: 'url'}],
+                            })(
+                                <Input/>
+                            )}
+                        </FormItem>
+                    </Form>
+                </Modal>
+                <Modal
+                    title="编辑记录"
+                    visible={editvisible}
+                    onOk={this.handleEditOk}
+                    onCancel={this.handleEditCancel}
                 >
                     <Form>
                         <FormItem label="名称">
@@ -122,7 +178,7 @@ class List extends React.Component{
 }
 function mapStateToProps(state) {
     return {
-        cardList: state.cards.cardList,
+        cardsList: state.cards.cardsList,
         cardsLoading: state.loading.effects['cards/queryList'],
         statistic: state.cards.statistic
     }

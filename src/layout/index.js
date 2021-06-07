@@ -14,13 +14,19 @@ class BasicLayout extends Component {
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                         <Menu.Item key="1">
                             <Icon type="pie-chart"/>
-                            <span>HelloWorld</span>
+                            <span>菜单列表</span>
                         </Menu.Item>
                         <SubMenu key="sub1" title={<span><Icon type="dashboard" /><span>Dashboard</span></span>}>
-                            <Menu.Item key="2"><Link to="/dashboard/analysis">分析页</Link></Menu.Item>
-                            <Menu.Item key="3"><Link to="/dashboard/monitor">监控页</Link></Menu.Item>
-                            <Menu.Item key="4"><Link to="/dashboard/workplace">工作台</Link></Menu.Item>
-
+                            <Menu.ItemGroup key="g1">
+                                <Menu.Item key="2"><Link to="/dashboard/analysis">分析页</Link></Menu.Item>
+                                <Menu.Item key="3"><Link to="/dashboard/monitor">监控页</Link></Menu.Item>
+                                <Menu.Item key="4"><Link to="/dashboard/workplace">工作台</Link></Menu.Item>
+                            </Menu.ItemGroup>
+                        </SubMenu>
+                        <SubMenu key="sub2" title={<span><Icon type="AndroidFilled" /><span>list</span></span>}>
+                            <Menu.ItemGroup key="g2">
+                                <Menu.Item key="2"><Link to="/list">列表练习页</Link></Menu.Item>
+                            </Menu.ItemGroup>
                         </SubMenu>
 
                     </Menu>

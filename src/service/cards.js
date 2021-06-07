@@ -13,6 +13,9 @@ export function deleteOne(id) {
         body: JSON.stringify(data),
     });
 }
+export function addOne(data) {
+    return request
+}
 
 export function getStatistic(id) {
     return request(`/api/cards/${id}/statistic`);

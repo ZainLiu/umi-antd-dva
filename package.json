@@ -17,6 +17,8 @@
     "antd": "^3.26.14"
   },
   "dependencies": {
-    "@antv/g2": "^4.1.16"
+    "@ant-design/icons": "^4.6.2",
+    "@antv/g2": "^4.1.16",
+    "js-cookie": "^2.2.1"
   }
 }
