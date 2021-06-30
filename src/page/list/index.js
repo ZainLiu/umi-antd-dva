@@ -2,32 +2,19 @@ import {Table, Button, Form, Modal, Input, Menu, Dropdown} from "antd";
 import React from "react";
 import {connect} from "dva";
 import SampleChart from "../../component/SampleChart";
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { PlusOutlined, SearchOutlined,ExclamationCircleOutlined } from '@ant-design/icons'
 const FormItem = Form.Item
 
-
+const { confirm } = Modal
 
 class List extends React.Component{
     state = {
         visible: false,
         statisticVisible: false,
         id: null,
-        editvisible: false
+        editvisible: false,
+        deletevisible: false
     };
-    menu = (
-        <Menu>
-            <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" onSelect={this.showEdit}>
-                    编辑
-                </a>
-            </Menu.Item>
-            <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" onSelect={this.showEdit}>
-                    删除
-                </a>
-            </Menu.Item>
-        </Menu>
-    );
     colums = [
         {
             title: '名称',
@@ -48,11 +35,11 @@ class List extends React.Component{
         },
         {
             title: '',
-            dataIndex: 'statistic',
-            render: (_,{id}) => {
+            dataIndex: 'opperations',
+            render: () => {
                 return (
                     <Dropdown overlay={this.menu} placement="bottomLeft">
-                        <Button>操作</Button>
+                       <a>操作</a>
                     </Dropdown>
                 )
             }
@@ -104,9 +91,44 @@ class List extends React.Component{
         this.setState({
             statisticVisible:false,
         });
+    };
+    showDelete = () => {
+        confirm({
+            title: 'Do you Want to delete these items?',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Some descriptions',
+            onOk() {
+                console.log('OK');
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
     }
+    handleDeleteOk = () =>{
+        console.log("delete")
+    };
+    handleDeleteCancel = () => {
+        this.setState({
+            deletevisible: false
+        })
+    }
+    menu = (
+        <Menu>
+            <Menu.Item>
+                <a target="_blank" rel="noopener noreferrer" onClick={this.showEdit}>
+                    编辑
+                </a>
+            </Menu.Item>
+            <Menu.Item>
+                <a target="_blank" rel="noopener noreferrer" onClick={this.showDelete}>
+                    删除
+                </a>
+            </Menu.Item>
+        </Menu>
+    );
     render() {
-        const {visible, statisticVisible,id, editvisible} = this.state;
+        const {visible, statisticVisible,id, editvisible, deletevisible} = this.state;
         const {cardsList,cardsLoading,form:{getFieldDecorator},statistic} = this.props;
         return (
             <div>
@@ -167,6 +189,14 @@ class List extends React.Component{
                             )}
                         </FormItem>
                     </Form>
+                </Modal>
+                <Modal
+                    title="删除记录"
+                    visible={deletevisible}
+                    onOk={this.handleDeleteOk}
+                    onCancel={this.handleDeleteCancel}
+                >
+                    是否删除
                 </Modal>
                 <Modal visible={statisticVisible} footer={null} onCancel={this.handleStatisticCancel}>
                     <SampleChart data={statistic[id]}/>
